@@ -24,8 +24,14 @@ module.exports = {
         console.error('error: ' + error.stack);
         return;
       }
-
       return cb(results);
+    })
+  },
+  createUser: function(name, cb) {
+    connection.query('insert into users (name) VALUES (?)', [name], (err, result) => {
+      if (err) throw err
+
+      return cb(result);
     })
   },
 }
