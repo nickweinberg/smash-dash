@@ -29,8 +29,12 @@ module.exports = {
   },
   createUser: function(name, cb) {
     connection.query('insert into users (name) VALUES (?)', [name], (err, result) => {
-      if (err) throw err
-
+      try {
+        if (err) throw err
+      }
+      catch (error) {
+        return cb(error);
+      }
       return cb(result);
     })
   },

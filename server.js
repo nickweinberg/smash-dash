@@ -4,8 +4,8 @@ const app = express();
 const HTTP_PORT = 3000;
 const db = require('./db');
 
-app.use(express.static('public'));
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 app.get('/api/random', function (req, res) {
   db.getUsers((results) => {
@@ -19,6 +19,7 @@ app.get('/api/random', function (req, res) {
 });
 
 app.post('/api/user', (req, res) => {
+  console.log(req.body);
   if (typeof(req.body.name) === "string") {
     db.createUser(req.body.name, (result) => {
       res.send({
