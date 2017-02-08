@@ -21,3 +21,11 @@ create table bets (
   player_id INT NOT NULL,
   amount INT NOT NULL
 );
+
+create table ratings (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  player_id INT NOT NULL,
+  last_match_played_id INT NOT NULL
+  rating INT NOT NULL
+);
+
