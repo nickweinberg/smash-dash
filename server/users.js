@@ -9,6 +9,13 @@ getAllUsers(null, (err, result) => {
 
   console.log(result);
 }
+
+getUser(['nick'], (err, result) => {
+  if (err)
+    return err;
+
+  console.log(result);
+}
 */
 
 module.exports = {
@@ -19,3 +26,4 @@ module.exports = {
       VALUES (?, ${ DEFAULT_DUBLOON_AMOUNT })
     `),
 }
+
