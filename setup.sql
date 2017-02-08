@@ -15,11 +15,11 @@ SET FOREIGN_KEY_CHECKS = 1;
 create table users (
   user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(80) UNIQUE,
-  points INT
+  dubloons INT
 );
 
 
-INSERT INTO users (name, points)
+INSERT INTO users (name, dubloons)
 VALUES
   ('nick', '1000'), ('duane', '500');
 
@@ -32,7 +32,7 @@ create table matches (
   match_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   tournament_id INT NOT NULL,
   status VARCHAR(80) NOT NULL,
-  k_factor INT DEFAULT 1,
+  k_factor INT DEFAULT 32,
   player_one_id INT NOT NULL,
   player_two_id INT NOT NULL,
   player_one_score INT,
