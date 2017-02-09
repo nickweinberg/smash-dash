@@ -9,6 +9,7 @@ const { createTournament, getTournament } = require('./tournaments');
 const { createMatch, getMatch, updateMatch } = require('./matches');
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
 app.use(express.static('public'));
 
 app.get('/api/random', function (req, res) {
