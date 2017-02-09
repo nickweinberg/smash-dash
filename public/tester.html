@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <script
+      src="https://code.jquery.com/jquery-3.1.1.min.js"
+      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+      crossorigin="anonymous"></script>
+  </head>
+
+  <h2> Tournaments <h2>
+  <div>
+    <form id="tournament">
+     Name:  <input name="name">
+      <button type="button" value="POST" id="postTournament">CREATE</button>
+    </form>
+  </div>
+
+  <h2> Matches <h2>
+  <div>
+    <form id="match">
+
+      <div> Tournament Id: <input name="tournament_id"> </div>
+      <div> Status: <input name="status"> </div>
+      <div> k-Factor: <input name="k_factor"> </div>
+      <div> Player 1: <input name="player_one_id"> </div>
+      <div> Player 2: <input name="player_two_id"> </div>
+      <div> Player 1 Score: <input name="player_one_score"> </div>
+      <div> Player 2 Score: <input name="player_two_score"> </div>
+
+      <button type="button" value="POST" id="postMatch">CREATE</button>
+      <button type="button" value="PUT" id="putMatch">Update</button>
+    </form>
+  </div>
+
+  <h3> Get Match </h3>
+  <div>
+    Match Id: <input id="matchId">
+    <button type="button" value="GET" id="getMatch">GET</button>
+    <div id="matchResult" />
+  </div>
+
+  <script>
+    console.log('sdjflksdj');
+      $('#postTournament').click(() => {
+        $.ajax({
+          method: 'POST',
+          contentType: 'application/json',
+          url: '/api/tournament',
+          data: $('#tournament').serialize(),
+          processData: false,
+          dataType: 'json',
+          success: (data) => {
+            console.log('tournament -- data = ', data);
+          }
+        })
+      });
+
+      $('#postMatch').click(() => {
+        $.post('/api/match', $('#match').serialize(), (data) => {
+          console.log('MATCH -- data = ', data);
+        });
+      });
+
+      $('#putMatch').click(() => {
+        var formData = $('#match').serializeArray().reduce((prev, curr) => {
+          return prev[curr.name] = curr.value;
+        }, {});
+        $.ajax({
+          url: '/api/match',
+          type: 'PUT',
+          data: formData,
+          success: (data) => {
+            console.log('MATCH -- data = ', data);
+          }
+        });
+      });
+
+      $('#getMatch').click(() => {
+        var matchId = $('#matchId').val()
+        $.get('/api/match/' + matchId, (data) => {
+          console.log('match = ', data);
+          $('#matchResult').val(JSON.stringify(data, null, 2))
+        })
+      });
+
+  </script>
+
+
+</html>
