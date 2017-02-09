@@ -42,7 +42,6 @@
     console.log('sdjflksdj');
       $('#postTournament').click(() => {
         const tournamentName = $("#tournament input[name='name']").val();
-        console.log(tournamentName);
         $.ajax({
           method: 'POST',
           contentType: 'application/json',
