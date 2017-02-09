@@ -56,7 +56,7 @@ app.post('/api/tournament', (req, res) => {
   if (typeof(req.body.name) === "string") {
     createTournament(req.body.name, (err, result) =>
       res.send({
-        success: !!err,
+        success: !err,
         message: err || result,
       })
     );

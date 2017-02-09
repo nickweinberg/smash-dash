@@ -5,7 +5,7 @@ module.exports = {
     getConnection().query(`
         INSERT INTO tournaments
           (name)
-        VALUES (?, ${ name })
+        VALUES (?)
       `,
       [name],
       (err = null, results) => {

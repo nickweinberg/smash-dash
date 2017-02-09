@@ -41,11 +41,13 @@
   <script>
     console.log('sdjflksdj');
       $('#postTournament').click(() => {
+        const tournamentName = $("#tournament input[name='name']").val();
+        console.log(tournamentName);
         $.ajax({
           method: 'POST',
           contentType: 'application/json',
           url: '/api/tournament',
-          data: $('#tournament').serialize(),
+          data: JSON.stringify({ name: tournamentName }),
           processData: false,
           dataType: 'json',
           success: (data) => {
