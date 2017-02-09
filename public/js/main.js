@@ -1,12 +1,19 @@
+var flashMessage = function(message) {
+  $('#flash').html(message);
+
+  $('#flash').delay(500).fadeIn('normal', function() {
+    $(this).delay(2500).fadeOut();
+  });
+};
+
 $(function() {
   /* ==== get users ==== */
   $('#callAPI').on('click', function(evt) {
-    console.log('clicked');
     $.ajax({
       method: 'GET',
       url: '/api/random',
     }).done(function(resp) {
-      console.log(resp);
+      flashMessage(JSON.stringify(resp.data, null, 2));
     });
   });
 
@@ -21,8 +28,8 @@ $(function() {
       data: JSON.stringify({ name: name }),
       processData: false,
       dataType: 'json',
-    }).done(function(msg) {
-      console.log(msg);
+    }).done(function(resp) {
+      flashMessage(resp.message.affectedRows);
     });
   });
 

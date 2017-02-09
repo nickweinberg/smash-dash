@@ -14,13 +14,12 @@
         <link rel="stylesheet" href="css/normalize.min.css">
         <link rel="stylesheet" href="css/main.css">
 
-        <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
     </head>
     <body>
 
         <div class="header-container">
             <header class="wrapper clearfix">
-                <h1 class="title">h1.title</h1>
+                <h1 class="title">Dash</h1>
                 <nav>
                     <ul>
                         <li><a href="#">Home</a></li>
@@ -32,11 +31,11 @@
         </div>
 
         <div class="main-container">
+          <div id="flash"></div>
             <div class="main wrapper clearfix">
                 <article>
                     <header>
-                        <h1>Smash Dash</h1>
-                        <p>Admin Panel here.</p>
+                        <h1>Admin Panel</h1>
                     </header>
                     <section>
                         <h2>Match Result</h2>
@@ -44,7 +43,7 @@
                     <section>
                         <h2>Add User</h2>
                         <div>
-                          <input type="button" id="callAPI" value="Click Me">
+                          <input type="button" id="callAPI" value="Get Users">
                           <input type="text" id="nameField" placeholder="name here">
                           <input type="button" id="createUser" value="Create User">
                           <div id="result"></div>
@@ -58,11 +57,6 @@
                         <p>lets all try to be adults here.</p>
                     </footer>
                 </article>
-
-                <aside>
-                    <h3>Example</h3>
-                    </p>example aside - looks a little cheesy.</p>
-                </aside>
 
             </div> <!-- #main -->
         </div> <!-- #main-container -->
@@ -80,5 +74,6 @@
       crossorigin="anonymous"></script>
 
     <script src="js/main.js"></script>
+    <script src="js/elo.js"></script>
     </body>
 </html>

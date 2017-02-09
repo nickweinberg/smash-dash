@@ -371,3 +371,10 @@ nav a:hover {
         page-break-after: avoid;
     }
 }
+
+/* ===== Messaging ====== */
+#flash {
+  font-size: 18px;
+  line-height: 1.4;
+}
+
