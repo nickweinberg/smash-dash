@@ -108,7 +108,8 @@ app.post('/api/match', (req, res) => {
       return res.send({
         success: !err,
         message: err || result,
-      });
+      })
+    });
   } else {
     return res.send({
         success: false,

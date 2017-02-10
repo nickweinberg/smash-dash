@@ -46,6 +46,6 @@ module.exports = {
     [ args, userId ],
     (err = null, results) => {
       return cb(err, JSON.parse(JSON.stringify(...results)));
-    }
+    });
   }
 }
