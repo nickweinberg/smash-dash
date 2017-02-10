@@ -4,38 +4,65 @@
       src="https://code.jquery.com/jquery-3.1.1.min.js"
       integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
       crossorigin="anonymous"></script>
+
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <title></title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+      <link rel="stylesheet" href="css/normalize.min.css">
+      <link rel="stylesheet" href="css/main.css">
   </head>
 
-  <h2> Tournaments <h2>
-  <div>
-    <form id="tournament">
-     Name:  <input name="name">
-      <button type="button" value="POST" id="postTournament">CREATE</button>
-    </form>
+  <div class="header-container">
+    <header class="wrapper clearfix">
+        <h1 class="title">Admin Panel</h1>
+        <nav>
+            <ul>
+                <li><a id="tournamentHeader">Tournaments</a></li>
+                <li><a id="matchHeader">Matches</a></li>
+                <li><a id="playerHeader">Players</a></li>
+            </ul>
+        </nav>
+    </header>
   </div>
 
-  <h2> Matches <h2>
-  <div>
-    <form id="match">
+  <div class="main-container">
+    <div id="tournament">
+      <h2> Tournaments <h2>
+      <div>
+        <form id="tournament">
+        Name:  <input name="name">
+          <button type="button" value="POST" id="postTournament">CREATE</button>
+        </form>
+      </div>
+    </div>
 
-      <div> Tournament Id: <input name="tournament_id"> </div>
-      <div> Status: <input name="status"> </div>
-      <div> k-Factor: <input name="k_factor"> </div>
-      <div> Player 1: <input name="player_one_id"> </div>
-      <div> Player 2: <input name="player_two_id"> </div>
-      <div> Player 1 Score: <input name="player_one_score"> </div>
-      <div> Player 2 Score: <input name="player_two_score"> </div>
+    <h2> Matches <h2>
+    <div>
+      <form id="match">
 
-      <button type="button" value="POST" id="postMatch">CREATE</button>
-      <button type="button" value="PUT" id="putMatch">Update</button>
-    </form>
-  </div>
+        <div> Tournament Id: <input name="tournament_id"> </div>
+        <div> Status: <input name="status"> </div>
+        <div> k-Factor: <input name="k_factor"> </div>
+        <div> Player 1: <input name="player_one_id"> </div>
+        <div> Player 2: <input name="player_two_id"> </div>
+        <div> Player 1 Score: <input name="player_one_score"> </div>
+        <div> Player 2 Score: <input name="player_two_score"> </div>
 
-  <h3> Get Match </h3>
-  <div>
-    Match Id: <input id="matchId">
-    <button type="button" value="GET" id="getMatch">GET</button>
-    <div id="matchResult" />
+        <button type="button" value="POST" id="postMatch">CREATE</button>
+        <button type="button" value="PUT" id="putMatch">Update</button>
+      </form>
+    </div>
+
+    <h3> Get Match </h3>
+    <div>
+      Match Id: <input id="matchId">
+      <button type="button" value="GET" id="getMatch">GET</button>
+      <div id="matchResult" />
+    </div>
   </div>
 
   <script>
@@ -85,5 +112,10 @@
 
   </script>
 
+  <div class="footer-container">
+      <footer class="wrapper">
+          <h3>smash dash tm</h3>
+      </footer>
+  </div>
 
 </html>
