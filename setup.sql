@@ -20,9 +20,6 @@ create table users (
 );
 
 
-INSERT INTO users (name, dubloons)
-VALUES
-  ('nick', '1000'), ('duane', '500');
 
 create table tournaments (
   tournament_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -32,7 +29,7 @@ create table tournaments (
 create table matches (
   match_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   tournament_id INT NOT NULL,
-  status VARCHAR(80) NOT NULL,
+  status VARCHAR(80),
   k_factor INT DEFAULT 32,
   player_one_id INT NOT NULL,
   player_two_id INT NOT NULL,
@@ -42,6 +39,7 @@ create table matches (
   FOREIGN KEY (player_one_id) REFERENCES users(user_id),
   FOREIGN KEY (player_two_id) REFERENCES users(user_id)
 );
+
 
 create table bets (
   bet_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -54,6 +52,7 @@ create table bets (
   FOREIGN KEY (player_id) REFERENCES users(user_id)
 );
 
+
 create table ratings (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   player_id INT NOT NULL,
@@ -63,4 +62,10 @@ create table ratings (
   FOREIGN KEY (player_id) REFERENCES users(user_id)
 );
 
+
+INSERT INTO users (name, dubloons)
+VALUES ('nick', '1000', '1200'), ('duane', '500', '1200');
+insert into tournaments (name) values ('1');
+insert into matches (tournament_id, player_one_id, player_two_id, player_one_score, player_two_score)
+values (1, 1, 2, 2, 1);
 
