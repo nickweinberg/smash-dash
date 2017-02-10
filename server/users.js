@@ -36,5 +36,16 @@ module.exports = {
         return cb(err, (results) ? name : null)
       }
     )
+  },
+  updateUser: function(userId, args, cb) {
+    getConnection().query(`
+      UPDATE users
+      set ?
+      WHERE userId = ?
+    `,
+    [ args, userId ],
+    (err = null, results) => {
+      return cb(err, JSON.parse(JSON.stringify(...results)));
+    }
   }
 }

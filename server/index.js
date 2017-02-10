@@ -4,9 +4,10 @@ const express = require('express');
 const app = express();
 const HTTP_PORT = 3000;
 // const db = require('./db');
-const { createUser, getAllUsers, getUser } = require('./users');
+const { createUser, getAllUsers, getUser, updateUser } = require('./users');
 const { createTournament, getTournament } = require('./tournaments');
 const { createMatch, getMatch, updateMatch } = require('./matches');
+const elo = require('./elo');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -75,10 +76,29 @@ app.get('/api/tournament/:tournamentId' , (req, res) => {
   });
 });
 
+function getWinnerLoser(p1, p2) {
+  if (parseInt(p1[1]) > parseInt(2[1])) {
+    return [p1[0], p2[0]];
+  } else {
+    return [p2[0], p1[0]];
+  }
+}
+
 /*
  * match should create a match
- *
+ * check the winner/loser
+ * get updated elo. 
+ * update each user with their updated elo.
+ * insert a row in rating for each user.
  */
+function completeMatch({ player_one_id, player_two_id, player_one_score, player_two_score, k_factor }) {
+  /* only create ratings if createMatch was successful */
+  if (!k_factor) {
+    k_factor = 32;
+  }
+
+}
+
 app.post('/api/match', (req, res) => {
   console.log(req.body);
 
@@ -89,7 +109,6 @@ app.post('/api/match', (req, res) => {
         success: !err,
         message: err || result,
       });
-    });
   } else {
     return res.send({
         success: false,
