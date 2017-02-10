@@ -63,7 +63,7 @@ create table ratings (
 );
 
 
-INSERT INTO users (name, dubloons)
+INSERT INTO users (name, dubloons, rating)
 VALUES ('nick', '1000', '1200'), ('duane', '500', '1200');
 insert into tournaments (name) values ('1');
 insert into matches (tournament_id, player_one_id, player_two_id, player_one_score, player_two_score)
