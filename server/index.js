@@ -89,11 +89,13 @@ function completeMatch({ player_one_id, player_two_id, player_one_score, player_
   if (!k_factor) {
     k_factor = 32;
   }
+  console.log('complete match')
   const [winnerId, loserId] = getWinnerLoser([player_one_id, player_one_score], [player_two_id, player_two_score]);
   getUsers([winnerId, loserId], (err, [winnerObj, loserObj]) => {
     if(err)
       return err;
 
+    console.log('got users');
     const [newWinnerElo, newLoserElo] = elo(winnerObj.rating, loserObj.rating);
     updateUserRating(winnerId, newWinnerElo, (err, result) => {
       if(err)
@@ -133,15 +135,17 @@ app.post('/api/match', (req, res) => {
 
   if (Object.keys(req.body).length > 0) {
     createMatch(req.body, (err, result) => {
-      completeMatch(req.body, (err, result) => {
-        if(err)
-          console.error(err);
-        console.log(result);
-      });
-      return res.send({
-        success: !err,
-        message: err || result,
-      })
+      if(err) {
+        console.err(err);
+        return res.send({ success: false, message: 'all borked bro' });
+      } else {
+        completeMatch(req.body, result.insertId, (err, result) => {
+          return res.send({
+            success: !err,
+            message: err || result,
+          });
+        });
+      }
     });
   } else {
     return res.send({
