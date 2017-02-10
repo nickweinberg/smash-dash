@@ -15,6 +15,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 create table users (
   user_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(80) UNIQUE,
+  rating INT,
   dubloons INT
 );
 
