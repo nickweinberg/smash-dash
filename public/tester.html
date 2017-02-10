@@ -13,12 +13,13 @@
       <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
       <link rel="stylesheet" href="css/normalize.min.css">
+      <link rel="stylesheet" href="css/skeleton.css">
       <link rel="stylesheet" href="css/main.css">
   </head>
 
   <div class="header-container">
     <header class="wrapper clearfix">
-        <h1 class="title">Admin Panel</h1>
+        <h6 class="title">Admin Panel</h5>
         <nav>
             <ul>
                 <li><a id="tournamentHeader">Tournaments</a></li>
@@ -29,35 +30,67 @@
     </header>
   </div>
 
-  <div class="main-container">
-    <div id="tournament">
-      <h2> Tournaments <h2>
-      <div>
+  <div class="main-container container">
+    <!-- start match admin -->
+    <div class="row">
+      <h5> Matches </h5>
+      <form id="match">
+        <div class="row">
+          <div class="six columns">
+            <label> Tournament Id: </label><input name="tournament_id"> 
+          </div>
+          <div class="six columns">
+            <label> k-Factor: </label><input name="k_factor" placeholder="32"> 
+          </div>
+        </div>
+        <div class="row">
+          <div class="six columns">
+            <label> Player 1:</label> 
+              <select class="u-full-width my-select" name="player_one_id"> 
+                <option value="1">nick</option>
+                <option value="2">duane</option>
+              </select>
+          </div>
+          <div class="six columns">
+            <label> Player 2: </label>
+              <select class="u-full-width my-select" name="player_two_id"> 
+                <option value="1">nick</option>
+                <option value="2">duane</option>
+              </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="six columns">
+            <label> Player 1 Score: <input name="player_one_score"> </label>
+          </div>
+          <div class="six columns">
+            <label> Player 2 Score: <input name="player_two_score"> </label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="twelve columns">
+            <button type="button" value="POST" id="postMatch">CREATE</button>
+            <button type="button" value="PUT" id="putMatch">Update</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <!-- end matches -->
+
+    <!-- tournaments admin -->
+    <div class="row" id="tournament">
+      <div class="twelve columns">
+      <h5> Tournaments </h5>
         <form id="tournament">
-        Name:  <input name="name">
+          <label for="tournament-name">Name:</label> <input class="" id="tournament-name" name="name">
           <button type="button" value="POST" id="postTournament">CREATE</button>
         </form>
       </div>
     </div>
+    <!-- end tournaments admin -->
 
-    <h2> Matches <h2>
-    <div>
-      <form id="match">
 
-        <div> Tournament Id: <input name="tournament_id"> </div>
-        <div> Status: <input name="status"> </div>
-        <div> k-Factor: <input name="k_factor"> </div>
-        <div> Player 1: <input name="player_one_id"> </div>
-        <div> Player 2: <input name="player_two_id"> </div>
-        <div> Player 1 Score: <input name="player_one_score"> </div>
-        <div> Player 2 Score: <input name="player_two_score"> </div>
-
-        <button type="button" value="POST" id="postMatch">CREATE</button>
-        <button type="button" value="PUT" id="putMatch">Update</button>
-      </form>
-    </div>
-
-    <h3> Get Match </h3>
+    <h5> Get Match </h5>
     <div>
       Match Id: <input id="matchId">
       <button type="button" value="GET" id="getMatch">GET</button>

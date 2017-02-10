@@ -57,7 +57,11 @@ textarea {
    ========================================================================== */
 
 body {
-    font: 16px/26px Helvetica, Helvetica Neue, Arial;
+    font-size 1.5em;
+    line-height: 1.6;
+    font-weight: 400;
+    font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #222;
 }
 
 .wrapper {
@@ -378,3 +382,11 @@ nav a:hover {
   line-height: 1.4;
 }
 
+
+.my-select {
+  font-size: 18px;
+}
+
+nav > ul {
+  font-size: 14px;
+}

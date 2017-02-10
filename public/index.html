@@ -12,6 +12,7 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
         <link rel="stylesheet" href="css/normalize.min.css">
+        <link rel="stylesheet" href="skeleton.css">
         <link rel="stylesheet" href="css/main.css">
 
     </head>
@@ -30,7 +31,7 @@
             </header>
         </div>
 
-        <div class="main-container">
+        <div class="main-container container">
           <div id="flash"></div>
             <div class="main wrapper clearfix">
                 <article>
@@ -41,13 +42,15 @@
                         <h2>Match Result</h2>
                     </section>
                     <section>
+                      <div class="row">
                         <h2>Add User</h2>
-                        <div>
+                        <div class="twelve columns">
                           <input type="button" id="callAPI" value="Get Users">
                           <input type="text" id="nameField" placeholder="name here">
                           <input type="button" id="createUser" value="Create User">
                           <div id="result"></div>
                         </div>
+                      </div>
                     </section>
                     <section>
                         <h2>Place Bet</h2>

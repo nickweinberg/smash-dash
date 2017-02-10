@@ -12,6 +12,24 @@ module.exports = {
       }
     )
   },
+  /* 
+  * getUsers(['1','2'], (err, res) => {
+  *   console.log(res);
+  * });
+  */
+  getUsers: function (userIds, cb) {
+    getConnection().query(`
+        SELECT *
+        FROM users
+        WHERE
+          user_id IN (?)
+      `,
+      [userIds],
+      (err = null, results) => {
+        return cb(err, JSON.parse(JSON.stringify(results)));
+      }
+   )
+  },
   getUser: function (userId, cb) {
     getConnection().query(`
         SELECT *
@@ -37,15 +55,15 @@ module.exports = {
       }
     )
   },
-  updateUser: function(userId, args, cb) {
+  updateUserRating: function(userId, newRating, cb) {
     getConnection().query(`
       UPDATE users
-      set ?
-      WHERE userId = ?
+      SET rating = ?
+      WHERE user_id = ?
     `,
-    [ args, userId ],
+    [ newRating, userId ],
     (err = null, results) => {
-      return cb(err, JSON.parse(JSON.stringify(...results)));
+      return cb(err, JSON.parse(JSON.stringify(results)));
     });
   }
 }

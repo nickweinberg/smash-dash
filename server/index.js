@@ -4,25 +4,16 @@ const express = require('express');
 const app = express();
 const HTTP_PORT = 3000;
 // const db = require('./db');
-const { createUser, getAllUsers, getUser, updateUser } = require('./users');
+const { createUser, getAllUsers, getUser, getUsers, updateUserRating } = require('./users');
 const { createTournament, getTournament } = require('./tournaments');
 const { createMatch, getMatch, updateMatch } = require('./matches');
+const { addRating } = require('./ratings');
 const elo = require('./elo');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static('public'));
 
-app.get('/api/random', function (req, res) {
-  // db.getUsers((results) => {
-  //   console.log(results);
-  // });
-
-  res.send({
-    success: true,
-    message: (Math.random() * 10) + 1
-  });
-});
 
 app.get('/api/users', (req, res) => {
   getAllUsers((err, users) => {
@@ -54,7 +45,6 @@ app.post('/api/user', (req, res) => {
 
 
 app.post('/api/tournament', (req, res) => {
-  console.log('req.body = ', req.body);
   if (typeof(req.body.name) === "string") {
     createTournament(req.body.name, (err, result) =>
       res.send({
@@ -77,12 +67,13 @@ app.get('/api/tournament/:tournamentId' , (req, res) => {
 });
 
 function getWinnerLoser(p1, p2) {
-  if (parseInt(p1[1]) > parseInt(2[1])) {
+  if (parseInt(p1[1]) > parseInt(p2[1])) {
     return [p1[0], p2[0]];
   } else {
     return [p2[0], p1[0]];
   }
 }
+
 
 /*
  * match should create a match
@@ -90,21 +81,63 @@ function getWinnerLoser(p1, p2) {
  * get updated elo. 
  * update each user with their updated elo.
  * insert a row in rating for each user.
+ * ie. 
+ * completeMatch({player_one_id: 1, player_two_id: 2, player_one_score: 2, player_two_score: 1}, 1, null)
  */
-function completeMatch({ player_one_id, player_two_id, player_one_score, player_two_score, k_factor }) {
+function completeMatch({ player_one_id, player_two_id, player_one_score, player_two_score, k_factor }, matchId, cb) {
   /* only create ratings if createMatch was successful */
   if (!k_factor) {
     k_factor = 32;
   }
+  const [winnerId, loserId] = getWinnerLoser([player_one_id, player_one_score], [player_two_id, player_two_score]);
+  getUsers([winnerId, loserId], (err, [winnerObj, loserObj]) => {
+    if(err)
+      return err;
 
+    const [newWinnerElo, newLoserElo] = elo(winnerObj.rating, loserObj.rating);
+    updateUserRating(winnerId, newWinnerElo, (err, result) => {
+      if(err)
+        return err;
+
+      console.log('updated winner');
+    });
+
+    updateUserRating(loserId, newLoserElo, (err, result) => {
+      if(err)
+        return err;
+
+      console.log('updated loser');
+    });
+
+    /* add winner and loser ratings rows */
+    addRating([winnerId, matchId, newWinnerElo], (err, results) => {
+      if(err)
+        return err;
+
+      console.log('winner rating row added');
+    });
+
+    addRating([loserId, matchId, newLoserElo], (err, results) => {
+      if(err)
+        return err;
+
+      console.log('loser rating row added');
+    });
+  });
+  return true;
 }
+
 
 app.post('/api/match', (req, res) => {
   console.log(req.body);
 
   if (Object.keys(req.body).length > 0) {
     createMatch(req.body, (err, result) => {
-      console.log(err);
+      completeMatch(req.body, (err, result) => {
+        if(err)
+          console.error(err);
+        console.log(result);
+      });
       return res.send({
         success: !err,
         message: err || result,
@@ -124,9 +157,10 @@ app.get('/api/match/:matchId' , (req, res) => {
   });
 });
 
+/* um does this even work? */
 app.put('/api/match/:matchId' , (req, res) => {
   if (req.params.matchId && Object.keys(req.body).length > 0) {
-    updateMatch(req.params.matchId, (err, match) => {
+    updateMatch(req.params.matchId, req.body, (err, match) => {
       return res.json(match);
     });
   } else {
