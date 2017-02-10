@@ -75,18 +75,25 @@ app.get('/api/tournament/:tournamentId' , (req, res) => {
   });
 });
 
+/*
+ * match should create a match
+ *
+ */
 app.post('/api/match', (req, res) => {
-  if (typeof(req.body.name) === "string") {
-    createMatch(req.body.name, (err, result) =>
-      res.send({
-        success: !!err,
+  console.log(req.body);
+
+  if (Object.keys(req.body).length > 0) {
+    createMatch(req.body, (err, result) => {
+      console.log(err);
+      return res.send({
+        success: !err,
         message: err || result,
-      })
-    );
+      });
+    });
   } else {
-    res.send({
-      success: false,
-      message: 'Name is Required -- Failed to Add tournament',
+    return res.send({
+        success: false,
+        message: 'Missing Required Params -- Failed to update match',
     });
   }
 });
