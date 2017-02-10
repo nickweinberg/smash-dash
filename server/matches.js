@@ -4,11 +4,11 @@ module.exports = {
   createMatch: function(args, cb) {
     getConnection().query(`
         INSERT INTO matches
-          SET ?
+        SET ?
       `,
-      args,
+      [ args ],
       (err = null, results) => {
-        return cb(err, (results) ? name : null)
+        return cb(err, JSON.parse(JSON.stringify(results)));
       }
     )
   },
