@@ -8,6 +8,7 @@ const { createUser, getAllUsers, getUser, getUsers, updateUserRating } = require
 const { createTournament, getTournament } = require('./tournaments');
 const { createMatch, getMatch, updateMatch } = require('./matches');
 const { addRating } = require('./ratings');
+const { getAllBets, createBet } = require('./bets')
 const elo = require('./elo');
 
 app.use(bodyParser.json());
@@ -66,6 +67,26 @@ app.get('/api/tournament/:tournamentId' , (req, res) => {
   });
 });
 
+
+app.get('/api/bets', (req, res) => {
+  getAllBets((err, bets) => {
+    res.json(bets);
+  })
+})
+
+
+app.post('/api/bet', (req, res) => {
+  createBet(req.body.tournament_id, req.body.bettor_id, req.body.player_id,
+            req.body.amount, (err, result)=> {
+    res.send({
+      success: !err,
+      message: err || result,
+    })
+  })
+})
+
+
+
 function getWinnerLoser(p1, p2) {
   if (parseInt(p1[1]) > parseInt(p2[1])) {
     return [p1[0], p2[0]];
@@ -78,10 +99,10 @@ function getWinnerLoser(p1, p2) {
 /*
  * match should create a match
  * check the winner/loser
- * get updated elo. 
+ * get updated elo.
  * update each user with their updated elo.
  * insert a row in rating for each user.
- * ie. 
+ * ie.
  * completeMatch({player_one_id: 1, player_two_id: 2, player_one_score: 2, player_two_score: 1}, 1, null)
  */
 function completeMatch({ player_one_id, player_two_id, player_one_score, player_two_score, k_factor }, matchId, cb) {
