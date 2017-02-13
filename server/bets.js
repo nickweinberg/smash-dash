@@ -11,15 +11,14 @@ module.exports = {
     )
   },
 
-  createBet: function(tournament_id, bettor_id, player_id, amount, cb) {
+  createBet: function(args, cb) {
     getConnection().query(`
         INSERT INTO bets
-          (tournament_id, bettor_id, player_id, amount)
-        VALUES (?, ?, ?, ?)
+        SET ?
       `,
-      [tournament_id, bettor_id, player_id, amount],
-      (err=null, results) => {
-        return cb(err, (results) ? name : null)
+      [ args ],
+      (err = null, results) => {
+        return cb(err, JSON.parse(JSON.stringify(results)));
       })
   }
 
