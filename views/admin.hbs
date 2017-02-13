@@ -1,0 +1,134 @@
+<div class="header-container">
+  <div class="wrapper clearfix">
+    <h6 class="title">Admin Panel</h5>
+    <nav>
+        <ul>
+            <li><a id="tournamentHeader">Tournaments</a></li>
+            <li><a id="matchHeader">Matches</a></li>
+            <li><a id="playerHeader">Players</a></li>
+        </ul>
+    </nav>
+  </div>
+</div>
+
+<div class="main-container container">
+  <!-- start match admin -->
+  <div class="row">
+    <h5> Matches </h5>
+    <form id="match">
+      <div class="row">
+        <div class="six columns">
+          <label> Tournament Id: </label>
+          <select name="tournament_id">
+            {{#each data.tournaments}}
+              <option value="{{tournament_id}}">{{name}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="six columns">
+          <label> k-Factor: </label><input name="k_factor" placeholder="32">
+        </div>
+      </div>
+      <div class="row">
+        <div class="six columns">
+          <label> Player 1:</label>
+            <select class="u-full-width my-select" name="player_one_id">
+              {{#each data.users}}
+                <option value="{{user_id}}">{{name}}</option>
+              {{/each}}
+            </select>
+        </div>
+        <div class="six columns">
+          <label> Player 2: </label>
+            <select class="u-full-width my-select" name="player_two_id">
+              {{#each data.users}}
+                <option value="{{user_id}}">{{name}}</option>
+              {{/each}}
+            </select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="six columns">
+          <label> Player 1 Score: <input name="player_one_score"> </label>
+        </div>
+        <div class="six columns">
+          <label> Player 2 Score: <input name="player_two_score"> </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="twelve columns">
+          <button type="button" value="POST" id="postMatch">CREATE</button>
+          <button type="button" value="PUT" id="putMatch">Update</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <!-- end matches -->
+
+  <!-- tournaments admin -->
+  <div class="row" id="tournament">
+    <div class="twelve columns">
+    <h5> Tournaments </h5>
+      <form id="tournament">
+        <label for="tournament-name">Name:</label> <input class="" id="tournament-name" name="name">
+        <button type="button" value="POST" id="postTournament">CREATE</button>
+      </form>
+    </div>
+  </div>
+  <!-- end tournaments admin -->
+
+
+  <h5> Get Match </h5>
+  <div>
+    Match Id: <input id="matchId">
+    <button type="button" value="GET" id="getMatch">GET</button>
+    <div id="matchResult" />
+  </div>
+</div>
+
+<script>
+
+  $('#postTournament').click(() => {
+    const tournamentName = $("#tournament input[name='name']").val();
+    $.ajax({
+      method: 'POST',
+      contentType: 'application/json',
+      url: '/api/tournament',
+      data: JSON.stringify({ name: tournamentName }),
+      processData: false,
+      dataType: 'json',
+      success: (data) => {
+        console.log('tournament -- data = ', data);
+      }
+    })
+  });
+
+  $('#postMatch').click(() => {
+    $.post('/api/match', $('#match').serialize(), (data) => {
+      console.log('MATCH -- data = ', data);
+    });
+  });
+
+  $('#putMatch').click(() => {
+    var formData = $('#match').serializeArray().reduce((prev, curr) => {
+      return prev[curr.name] = curr.value;
+    }, {});
+    $.ajax({
+      url: '/api/match',
+      type: 'PUT',
+      data: formData,
+      success: (data) => {
+        console.log('MATCH -- data = ', data);
+      }
+    });
+  });
+
+  $('#getMatch').click(() => {
+    var matchId = $('#matchId').val()
+    $.get('/api/match/' + matchId, (data) => {
+      console.log('match = ', data);
+      $('#matchResult').val(JSON.stringify(data, null, 2))
+    })
+  });
+
+</script>
