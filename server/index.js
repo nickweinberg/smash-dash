@@ -1,19 +1,59 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const exphbs = require('express-handlebars');
 
 const app = express();
 const HTTP_PORT = 3000;
 // const db = require('./db');
-const { createUser, getAllUsers, getUser, getUsers, updateUserRating } = require('./users');
-const { createTournament, getTournament } = require('./tournaments');
+const {
+  createUser,
+  completeMatch,
+  getAllUsers,
+  getUser,
+  getUsers,
+  updateUserRating
+} = require('./users');
+const { createTournament, getTournament, getAllTournaments } = require('./tournaments');
 const { createMatch, getMatch, updateMatch } = require('./matches');
-const { addRating } = require('./ratings');
 const elo = require('./elo');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static('public'));
 
+app.engine('.hbs', exphbs({defaultLayout: 'main'}));
+app.set('view engine', '.hbs');
+
+app.get('/admin',
+  (req, res, next) => {
+    //Step 1: Get the Data
+    getAllUsers((err, users) => {
+      if (users) {
+        // Attach the Data to the req object
+        req.users = users;
+        return next();
+      }
+    });
+  },
+  (req, res, next) => {
+    //Step 1a: Get MOAR Data
+    getAllTournaments((err, tournaments) => {
+      if (tournaments) {
+        // Attach the Data to the req object
+        req.tournaments = tournaments;
+        return next();
+      }
+    });
+  },
+  (req, res, next) => {
+    // Step 2: Render the data and add the data to the
+    res.render('admin', {
+      data: {
+        users: req.users,
+        tournaments: req.tournaments,
+      }
+    });
+});
 
 app.get('/api/users', (req, res) => {
   getAllUsers((err, users) => {
@@ -72,61 +112,6 @@ function getWinnerLoser(p1, p2) {
   } else {
     return [p2[0], p1[0]];
   }
-}
-
-
-/*
- * match should create a match
- * check the winner/loser
- * get updated elo. 
- * update each user with their updated elo.
- * insert a row in rating for each user.
- * ie. 
- * completeMatch({player_one_id: 1, player_two_id: 2, player_one_score: 2, player_two_score: 1}, 1, null)
- */
-function completeMatch({ player_one_id, player_two_id, player_one_score, player_two_score, k_factor }, matchId, cb) {
-  /* only create ratings if createMatch was successful */
-  if (!k_factor) {
-    k_factor = 32;
-  }
-  console.log('complete match')
-  const [winnerId, loserId] = getWinnerLoser([player_one_id, player_one_score], [player_two_id, player_two_score]);
-  getUsers([winnerId, loserId], (err, [winnerObj, loserObj]) => {
-    if(err)
-      return err;
-
-    console.log('got users');
-    const [newWinnerElo, newLoserElo] = elo(winnerObj.rating, loserObj.rating);
-    updateUserRating(winnerId, newWinnerElo, (err, result) => {
-      if(err)
-        return err;
-
-      console.log('updated winner');
-    });
-
-    updateUserRating(loserId, newLoserElo, (err, result) => {
-      if(err)
-        return err;
-
-      console.log('updated loser');
-    });
-
-    /* add winner and loser ratings rows */
-    addRating([winnerId, matchId, newWinnerElo], (err, results) => {
-      if(err)
-        return err;
-
-      console.log('winner rating row added');
-    });
-
-    addRating([loserId, matchId, newLoserElo], (err, results) => {
-      if(err)
-        return err;
-
-      console.log('loser rating row added');
-    });
-  });
-  return true;
 }
 
 
