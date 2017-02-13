@@ -1,5 +1,6 @@
 const { getConnection } = require('./db');
 const { addRating } = require('./ratings');
+const elo = require('./elo');
 
 const DEFAULT_DUBLOON_AMOUNT = 100;
 
@@ -91,7 +92,7 @@ function completeMatch ({ player_one_id, player_two_id, player_one_score, player
     k_factor = 32;
   }
   console.log('complete match')
-  const [winnerId, loserId] = getWinnerLoser([player_one_id, player_one_score], [player_two_id, player_two_score]);
+  const [winnerId, loserId] = _getWinnerLoser([player_one_id, player_one_score], [player_two_id, player_two_score]);
   getUsers([winnerId, loserId], (err, [winnerObj, loserObj]) => {
     if(err)
       return err;
@@ -128,4 +129,12 @@ function completeMatch ({ player_one_id, player_two_id, player_one_score, player
     });
   });
   return true;
+}
+
+function _getWinnerLoser(p1, p2) {
+  if (parseInt(p1[1]) > parseInt(p2[1])) {
+    return [p1[0], p2[0]];
+  } else {
+    return [p2[0], p1[0]];
+  }
 }

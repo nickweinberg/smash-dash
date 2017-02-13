@@ -15,7 +15,6 @@ const {
 } = require('./users');
 const { createTournament, getTournament, getAllTournaments } = require('./tournaments');
 const { createMatch, getMatch, updateMatch } = require('./matches');
-const elo = require('./elo');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -105,14 +104,6 @@ app.get('/api/tournament/:tournamentId' , (req, res) => {
     res.json(match);
   });
 });
-
-function getWinnerLoser(p1, p2) {
-  if (parseInt(p1[1]) > parseInt(p2[1])) {
-    return [p1[0], p2[0]];
-  } else {
-    return [p2[0], p1[0]];
-  }
-}
 
 
 app.post('/api/match', (req, res) => {
