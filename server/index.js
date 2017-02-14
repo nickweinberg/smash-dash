@@ -14,7 +14,7 @@ const {
   updateUserRating
 } = require('./users');
 const { createTournament, getTournament, getAllTournaments } = require('./tournaments');
-const { createMatch, getMatch, updateMatch } = require('./matches');
+const { createMatch, getMatch, updateMatch, getPlayerMatches } = require('./matches');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -52,7 +52,27 @@ app.get('/admin',
         tournaments: req.tournaments,
       }
     });
-});
+  }
+);
+
+app.get('/ranking',
+  (req, res, next) => {
+    //Step 1: Get the Data
+    getAllUsers((err, users) => {
+      if (users) {
+        // Sort the Users
+        users.sort((a, b) => b.rating - a.rating);
+        // Attach the Data to the req object
+        req.users = users;
+        return next();
+      }
+    });
+  },
+  (req, res, next) => {
+    // Step 2: Render the data and add the data to the
+    return res.render('ranking', { users: req.users });
+  }
+);
 
 app.get('/api/users', (req, res) => {
   getAllUsers((err, users) => {

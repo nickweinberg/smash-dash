@@ -36,5 +36,18 @@ module.exports = {
         return cb(err, JSON.parse(JSON.stringify(...results)));
       }
     );
-  }
+  },
+  getPlayerMatches: function(playerId, cb) {
+    getConnection().query(`
+        SELECT *
+        FROM matches
+        WHERE
+          player_one_id = ? OR player_two_id = ?
+      `,
+      [ playerId ],
+      (err = null, results) => {
+        return cb(err, JSON.parse(JSON.stringify(...results)));
+      }
+    );
+  },
 }

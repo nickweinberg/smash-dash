@@ -11,7 +11,7 @@ module.exports = {
   createUser,
   updateUserRating,
   completeMatch,
-}
+};
 
 function getAllUsers (cb) {
   getConnection().query(`
@@ -66,13 +66,13 @@ function createUser (name, cb) {
     }
   )
 }
-function updateUserRating (userId, newRating, cb) {
+function updateUserRating (userId, updateFields, cb) {
   getConnection().query(`
     UPDATE users
-    SET rating = ?
+    SET ?
     WHERE user_id = ?
   `,
-  [ newRating, userId ],
+  [ updateFields, userId ],
   (err = null, results) => {
     return cb(err, JSON.parse(JSON.stringify(results)));
   });
@@ -92,40 +92,52 @@ function completeMatch ({ player_one_id, player_two_id, player_one_score, player
     k_factor = 32;
   }
   console.log('complete match')
-  const [winnerId, loserId] = _getWinnerLoser([player_one_id, player_one_score], [player_two_id, player_two_score]);
-  getUsers([winnerId, loserId], (err, [winnerObj, loserObj]) => {
-    if(err)
+
+
+  getUsers([player_one_id, player_two_id], (err, [playerOne, playerTwo]) => {
+    if(err) {
       return err;
+    }
+
+
+    const {one = {}, two = {}} = _determineResult(playerOne, player_one_score, playerTwo, player_two_score);
 
     console.log('got users');
-    const [newWinnerElo, newLoserElo] = elo(winnerObj.rating, loserObj.rating);
-    updateUserRating(winnerId, newWinnerElo, (err, result) => {
+    updateUserRating(player_one_id, one, (err, result) => {
       if(err)
         return err;
 
-      console.log('updated winner');
+      console.log('updated One');
     });
 
-    updateUserRating(loserId, newLoserElo, (err, result) => {
+    updateUserRating(player_two_id, two, (err, result) => {
       if(err)
         return err;
 
-      console.log('updated loser');
+      console.log('updated Two');
     });
 
     /* add winner and loser ratings rows */
-    addRating([winnerId, matchId, newWinnerElo], (err, results) => {
-      if(err)
+    addRating({
+      player_id: player_one_id,
+      match_id: matchId,
+      rating: one.rating
+    }, (err, results) => {
+      if (err)
         return err;
 
-      console.log('winner rating row added');
+      console.log('Player One rating row added');
     });
 
-    addRating([loserId, matchId, newLoserElo], (err, results) => {
-      if(err)
+    addRating({
+      player_id: player_two_id,
+      match_id: matchId,
+      rating: two.rating
+    }, (err, results) => {
+      if (err)
         return err;
 
-      console.log('loser rating row added');
+      console.log('Player Two rating row added');
     });
   });
   return true;
@@ -136,5 +148,31 @@ function _getWinnerLoser(p1, p2) {
     return [p1[0], p2[0]];
   } else {
     return [p2[0], p1[0]];
+  }
+}
+
+function _determineResult(one, scoreOne, two, scoreTwo) {
+  let oneElo, twoElo;
+  scoreOne = parseInt(scoreOne);
+  scoreTwo = parseInt(scoreTwo);
+
+  if (scoreOne > scoreTwo) {
+    [oneElo, twoElo] = elo(one.rating, two.rating);
+  } else {
+    [twoElo, oneElo] = elo(two.rating, one.rating);
+  }
+
+
+  return {
+    one: {
+      wins: parseInt(one.wins || 0) + scoreOne,
+      losses: parseInt(one.losses || 0) + scoreTwo,
+      rating: oneElo,
+    },
+    two: {
+      wins: parseInt(two.wins || 0) + scoreTwo,
+      losses: parseInt(two.losses || 0) + scoreOne,
+      rating: twoElo,
+    }
   }
 }
