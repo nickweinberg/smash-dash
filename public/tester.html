@@ -37,23 +37,23 @@
       <form id="match">
         <div class="row">
           <div class="six columns">
-            <label> Tournament Id: </label><input name="tournament_id"> 
+            <label> Tournament Id: </label><input name="tournament_id">
           </div>
           <div class="six columns">
-            <label> k-Factor: </label><input name="k_factor" placeholder="32"> 
+            <label> k-Factor: </label><input name="k_factor" placeholder="32">
           </div>
         </div>
         <div class="row">
           <div class="six columns">
-            <label> Player 1:</label> 
-              <select class="u-full-width my-select" name="player_one_id"> 
+            <label> Player 1:</label>
+              <select class="u-full-width my-select" name="player_one_id">
                 <option value="1">nick</option>
                 <option value="2">duane</option>
               </select>
           </div>
           <div class="six columns">
             <label> Player 2: </label>
-              <select class="u-full-width my-select" name="player_two_id"> 
+              <select class="u-full-width my-select" name="player_two_id">
                 <option value="1">nick</option>
                 <option value="2">duane</option>
               </select>
@@ -99,49 +99,49 @@
   </div>
 
   <script>
-    console.log('sdjflksdj');
-      $('#postTournament').click(() => {
-        const tournamentName = $("#tournament input[name='name']").val();
-        $.ajax({
-          method: 'POST',
-          contentType: 'application/json',
-          url: '/api/tournament',
-          data: JSON.stringify({ name: tournamentName }),
-          processData: false,
-          dataType: 'json',
-          success: (data) => {
-            console.log('tournament -- data = ', data);
-          }
-        })
-      });
 
-      $('#postMatch').click(() => {
-        $.post('/api/match', $('#match').serialize(), (data) => {
+    $('#postTournament').click(() => {
+      const tournamentName = $("#tournament input[name='name']").val();
+      $.ajax({
+        method: 'POST',
+        contentType: 'application/json',
+        url: '/api/tournament',
+        data: JSON.stringify({ name: tournamentName }),
+        processData: false,
+        dataType: 'json',
+        success: (data) => {
+          console.log('tournament -- data = ', data);
+        }
+      })
+    });
+
+    $('#postMatch').click(() => {
+      $.post('/api/match', $('#match').serialize(), (data) => {
+        console.log('MATCH -- data = ', data);
+      });
+    });
+
+    $('#putMatch').click(() => {
+      var formData = $('#match').serializeArray().reduce((prev, curr) => {
+        return prev[curr.name] = curr.value;
+      }, {});
+      $.ajax({
+        url: '/api/match',
+        type: 'PUT',
+        data: formData,
+        success: (data) => {
           console.log('MATCH -- data = ', data);
-        });
+        }
       });
+    });
 
-      $('#putMatch').click(() => {
-        var formData = $('#match').serializeArray().reduce((prev, curr) => {
-          return prev[curr.name] = curr.value;
-        }, {});
-        $.ajax({
-          url: '/api/match',
-          type: 'PUT',
-          data: formData,
-          success: (data) => {
-            console.log('MATCH -- data = ', data);
-          }
-        });
-      });
-
-      $('#getMatch').click(() => {
-        var matchId = $('#matchId').val()
-        $.get('/api/match/' + matchId, (data) => {
-          console.log('match = ', data);
-          $('#matchResult').val(JSON.stringify(data, null, 2))
-        })
-      });
+    $('#getMatch').click(() => {
+      var matchId = $('#matchId').val()
+      $.get('/api/match/' + matchId, (data) => {
+        console.log('match = ', data);
+        $('#matchResult').val(JSON.stringify(data, null, 2))
+      })
+    });
 
   </script>
 
