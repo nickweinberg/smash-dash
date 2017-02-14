@@ -1,0 +1,18 @@
+<div id="rankings">
+  <div id="rankingHeader" class="playerRow">
+    <span> Rank </span>
+    <span> Name </span>
+    <span> Elo </span>
+    <span> Record </span>
+  </div>
+  {{ log users }}
+  {{#each users }}
+    <div class="playerRow">
+      <span> {{@index}} </span>
+      <span> {{name}} </span>
+      <span> {{rating}} </span>
+      <span> {{wins}}-{{losses}} </span>
+    </div>
+  {{/each}}
+
+</div>

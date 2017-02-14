@@ -6,8 +6,8 @@ module.exports = {
    */
   addRating: function(args, cb) {
     getConnection().query(`
-      INSERT INTO ratings (player_id, last_match_played_id, rating)
-      VALUES (?, ?, ?)
+      INSERT INTO ratings
+      SET ?
     `,
     args,
     (err = null, results) => {

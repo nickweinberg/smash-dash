@@ -162,7 +162,17 @@ nav a:hover {
 
 
 
+.playerRow {
+    margin: 10px 0px;
+    display: flex;
+    width: 75%;
+    margin: 0px auto;
+}
 
+.playerRow > span {
+    display: inline-block;
+    width: 24%;
+}
 
 
 
