@@ -16,6 +16,7 @@ const {
 const { createTournament, getTournament, getAllTournaments } = require('./tournaments');
 const { createMatch, getMatch, updateMatch, getPlayerMatches } = require('./matches');
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static('public'));
@@ -124,6 +125,27 @@ app.get('/api/tournament/:tournamentId' , (req, res) => {
     res.json(match);
   });
 });
+
+
+
+app.get('/api/bets', (req, res) => {
+  getAllBets((err, bets) => {
+    res.json(bets);
+  })
+})
+
+
+app.post('/api/bet', (req, res) => {
+  createBet(req.body.tournament_id, req.body.bettor_id, req.body.player_id,
+            req.body.amount, (err, result)=> {
+    res.send({
+      success: !err,
+      message: err || result,
+    })
+  })
+})
+
+
 
 
 app.post('/api/match', (req, res) => {
